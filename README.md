@@ -7,11 +7,11 @@ wrapper of [htmlparser2](https://github.com/fb55/htmlparser2)
 
 ##install
 
-* using npm:
+***using npm:***
 
     npm install find-rss
 
-* or using package.json
+****or using package.json:***
 
     "find-rss": "*"
 
