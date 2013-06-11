@@ -5,14 +5,17 @@
   "author": "nikezono",
   "dependencies": {
     "feedparser": "*",
-    "underscore":"*",
-    "async":"*",
-    "htmlparser2":"*"
-    },
+    "underscore": "*",
+    "async": "*",
+    "htmlparser2": "*"
+  },
   "devDependencies": {
     "coffee-script": "*"
   },
-  "keywords": ["rss","feed"],
+  "keywords": [
+    "rss",
+    "feed"
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/nikezono/node-find-rss"
@@ -21,5 +24,11 @@
   "scripts": {},
   "engines": {
     "node": "*"
-  }
+  },
+  "readmeFilename": "README.md",
+  "gitHead": "303a4d890e16de433e20264330b47a3452f49777",
+  "directories": {
+    "test": "test"
+  },
+  "license": "BSD"
 }
