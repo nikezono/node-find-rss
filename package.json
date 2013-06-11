@@ -1,0 +1,25 @@
+{
+  "name": "find-rss",
+  "description": "find rss feeds",
+  "version": "0.1.0",
+  "author": "nikezono",
+  "dependencies": {
+    "feedparser": "*",
+    "underscore":"*",
+    "async":"*",
+    "htmlparser2":"*"
+    },
+  "devDependencies": {
+    "coffee-script": "*"
+  },
+  "keywords": ["rss","feed"],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nikezono/node-find-rss"
+  },
+  "main": "lib/find-rss.js",
+  "scripts": {},
+  "engines": {
+    "node": "*"
+  }
+}
