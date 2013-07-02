@@ -1,7 +1,5 @@
-node-find-rss
+node-find-rss [![Build Status](https://travis-ci.org/nikezono/node-find-rss.png)](https://travis-ci.org/nikezono/node-find-rss)
 ---
-
-[![Build Status](https://travis-ci.org/nikezono/node-find-rss.png)](https://travis-ci.org/nikezono/node-find-rss)
 
 find rss feeds in url
 
