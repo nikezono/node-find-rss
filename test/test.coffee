@@ -17,12 +17,15 @@ describe "find-rss", ->
       assert.equal candidates,null
       assert.equal e?, true
 
-  it "atomが返せる",->
+  it "atomが返せる",(done)->
     finder "http://shokai.org/blog/",(e,candidates)->
       assert.equal candidates.length,1
-  it "rss/xmlが返せる", ->
+      done()
+  it "rss/xmlが返せる",(done) ->
     finder "http://www.apple.com/",(e,candidates)->
       assert.equal candidates?,true
-  it "複数のRSSを配列にしまえる",->
+      done()
+  it "複数のRSSを配列にしまえる",(done)->
     finder "http://news.livedoor.com/",(e,candidates)->
-      assert.equal candidates.length>1, true  
+      assert.equal candidates.length>1, true
+      done()
