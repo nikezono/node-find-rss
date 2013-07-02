@@ -1,6 +1,8 @@
 node-find-rss
 ---
 
+[![Build Status](https://travis-ci.org/nikezono/node-find-rss.png)](https://travis-ci.org/nikezono/node-find-rss)
+
 find rss feeds in url
 
 wrapper of [htmlparser2](https://github.com/fb55/htmlparser2)
@@ -18,7 +20,8 @@ wrapper of [htmlparser2](https://github.com/fb55/htmlparser2)
 ##usage
     # Coffeescript
     finder = require 'find-rss'
-    finder "http://www.apple.com/",(candidates)->
+    finder "http://www.apple.com/",(error,candidates)->
+      console.log error if error
       console.log candidates
 
       # =>
