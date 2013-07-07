@@ -23,7 +23,8 @@ wrapper of [htmlparser2](https://github.com/fb55/htmlparser2)
       console.log candidates
 
       # =>
-      # [ { rel: 'alternate',
+      # [ { sitename: 'Apple'
+            rel: 'alternate',
             type: 'application/rss+xml',
             title: 'RSS',
             href: 'http://images.apple.com/main/rss/hotnews/hotnews.rss',

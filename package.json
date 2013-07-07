@@ -1,7 +1,7 @@
 {
   "name": "find-rss",
   "description": "find rss feeds",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "nikezono",
   "dependencies": {
     "async": "*",
@@ -13,6 +13,8 @@
   },
   "keywords": [
     "rss",
+    "atom",
+    "find",
     "feed"
   ],
   "repository": {
