@@ -24,7 +24,9 @@
     "url": "git://github.com/nikezono/node-find-rss"
   },
   "main": "lib/find-rss.js",
-  "scripts": {},
+  "scripts": {
+    "test": "cake test"
+    },
   "engines": {
     "node": "*"
   },
