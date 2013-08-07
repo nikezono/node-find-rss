@@ -7,7 +7,7 @@ finder = require path.resolve('lib','find-rss')
 
 # test Property
 shokai   = "http://shokai.org/blog/"
-shokai2   = "http://shokai.org/blog"
+shokai2  = "http://shokai.org/blog"
 apple    = "http://www.apple.com/"
 livedoor = "http://news.livedoor.com/"
 geta6    = "http://blog.geta6.net"
@@ -51,4 +51,9 @@ describe "find-rss", ->
   it "複数のRSSを配列にしまえる",(done)->
     finder livedoor,(e,candidates)->
       assert.equal candidates.length>1, true
+      done()
+
+  it "faviconが取得できる",(done)->
+    finder livedoor,(e,candidates)->
+      assert.equal candidates[0].favicon?,true
       done()

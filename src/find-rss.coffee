@@ -11,10 +11,12 @@ module.exports = (req,callback)->
   candidates   = []
   sitename     = ''
   sitenameFlag = false
+  favicon      = ''
 
   parser = new htmlparser.Parser(
     onopentag: (name, attr) ->
       candidates.push attr if name is "link" and attr.type is "application/rss+xml" or attr.type is "application/atom+xml"
+      favicon = attr.href if name is 'link' and (attr.rel is 'icon' or attr.rel is 'shortcut icon' or attr.type is 'image/x-icon')
       sitenameFlag = true if name is "title"
 
     ontext: (text)->
@@ -33,16 +35,28 @@ module.exports = (req,callback)->
 
     parser.write body
     parser.end()
+
     async.forEach candidates,(cand,cb)->
+      # sitename
       cand.sitename = sitename
+
+      # url(href)
       if cand.href.match /[http|https]:\/\//
         cand.url = cand.href
       else
         cand.url = "#{obj.protocol}//#{obj.host}#{cand.href}"
-      cb()
+
+      # favicon
+      if favicon?
+        cand.favicon = favicon
+        cb()
+      else
+        guess = "#{obj.protocol}//#{obj.host}/favicon.ico"
+        request guess, (err,res,body)->
+          cand.favicon is guess if res.statusCode is 200
+          cb()
     ,->
       if candidates.length is 0
         callback 'no such rss feeds.',null 
       else
-        callback null,
-          candidates
+        callback null,candidates

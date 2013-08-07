@@ -1,6 +1,8 @@
 node-find-rss [![Build Status](https://travis-ci.org/nikezono/node-find-rss.png)](https://travis-ci.org/nikezono/node-find-rss)
 ---
 
+[![NPM](https://nodei.co/npm/find-rss.png)](https://nodei.co/npm/find-rss/)
+
 find rss feeds in url
 
 wrapper of [htmlparser2](https://github.com/fb55/htmlparser2)
@@ -28,4 +30,5 @@ wrapper of [htmlparser2](https://github.com/fb55/htmlparser2)
             type: 'application/rss+xml',
             title: 'RSS',
             href: 'http://images.apple.com/main/rss/hotnews/hotnews.rss',
+            favicon: 'http://www.apple.com/favicon.ico',
             url: 'http://images.apple.com/main/rss/hotnews/hotnews.rss' } ]
