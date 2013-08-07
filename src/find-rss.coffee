@@ -60,13 +60,14 @@ module.exports = (req,callback)->
       if favicon.length > 0
         if favicon.match /[http|https]:\/\//
           cand.favicon = favicon
+          cb()
         else
-          console.log favicon
           if favicon.charAt(0) is '/'
             cand.favicon = "#{obj.protocol}//#{obj.host}#{favicon}"
+            cb()
           else
             cand.favicon = "#{obj.protocol}//#{obj.host}/#{favicon}"
-        cb()
+            cb()
 
       else
         guess = "#{obj.protocol}//#{obj.host}/favicon.ico"
