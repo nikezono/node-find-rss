@@ -57,13 +57,17 @@ module.exports = (req,callback)->
         cand.url = "#{obj.protocol}//#{obj.host}#{cand.href}"
 
       # favicon
-      if favicon?
-        cand.favicon = favicon
+      if favicon.length > 0
+        if favicon.match /[http|https]:\/\//
+          cand.favicon = favicon
+        else
+          console.log favicon
+          cand.favicon = "#{obj.protocol}//#{obj.host}#{favicon}"
         cb()
       else
         guess = "#{obj.protocol}//#{obj.host}/favicon.ico"
         request guess, (err,res,body)->
-          cand.favicon is guess if res.statusCode is 200
+          cand.favicon = guess if res.statusCode is 200
           cb()
     ,->
       if candidates.length is 0

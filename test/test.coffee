@@ -55,9 +55,14 @@ describe "find-rss", ->
       assert.equal candidates.length>1, true
       done()
 
-  it "faviconが取得できる",(done)->
+  it "faviconがhtmlのlinkタグから取得できる",(done)->
     finder livedoor,(e,candidates)->
       assert.equal candidates[0].favicon?,true
+      done()
+
+  it "faviconを自動で探索する", (done)->
+    finder shokai,(e,candidates)->
+      assert.equal candidates[0].favicon,'http://shokai.org/favicon.ico'
       done()
 
   it "文字化けしない", (done)->
