@@ -1,12 +1,14 @@
 {
   "name": "find-rss",
   "description": "find rss feeds",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "author": "nikezono",
   "dependencies": {
     "async": "*",
     "htmlparser2": "*",
-    "request": "*"
+    "request": "*",
+    "node-icu-charset-detector": "*",
+    "iconv": "*"
   },
   "devDependencies": {
     "coffee-script": "*"

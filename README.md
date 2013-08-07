@@ -32,3 +32,11 @@ wrapper of [htmlparser2](https://github.com/fb55/htmlparser2)
             href: 'http://images.apple.com/main/rss/hotnews/hotnews.rss',
             favicon: 'http://www.apple.com/favicon.ico',
             url: 'http://images.apple.com/main/rss/hotnews/hotnews.rss' } ]
+##dependency
+node-find-rss uses [node-icu-charset-detector](https://github.com/mooz/node-icu-charset-detector),and require **livicu-dev** or **icu4c**.
+
+    # ubuntu and debian-based systems
+    apt-get install libicu-dev
+    # os x
+    port install icu +devel                 # with macports
+    brew install icu4c && brew link icu4c   # homebrew

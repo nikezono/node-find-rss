@@ -1,6 +1,8 @@
 # test dependency
 path = require 'path'
 assert  = require 'assert'
+csDetector   = require("node-icu-charset-detector")
+
 
 # test framework
 finder = require path.resolve('lib','find-rss')
@@ -56,4 +58,10 @@ describe "find-rss", ->
   it "faviconが取得できる",(done)->
     finder livedoor,(e,candidates)->
       assert.equal candidates[0].favicon?,true
+      done()
+
+  it "文字化けしない", (done)->
+    finder livedoor,(e,candidates)->
+      #テストできない
+      console.log candidates[0].title
       done()

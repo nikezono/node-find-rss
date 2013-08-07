@@ -1,12 +1,14 @@
 module.exports = (req,callback)->
   # dependency
   htmlparser = require("htmlparser2")
-
+  csDetector = require("node-icu-charset-detector")
+  iconv      = require 'iconv'
+ 
   # utility
   async        = require 'async'
   url          = require 'url'
   request      = require 'request'
-
+  
   # instance property
   candidates   = []
   sitename     = ''
@@ -27,11 +29,19 @@ module.exports = (req,callback)->
   )
 
   # main
-  request req, (err,res,body)->
+  request.get 
+    uri: req
+    encoding: null
+  , (err,res,body)->
     if err?
       callback err,null 
       return
     obj = url.parse req
+    charset = csDetector.detectCharset(body).toString()
+
+    if charset isnt ('utf-8' or 'UTF-8')
+      converter = new iconv.Iconv(charset,'utf-8')
+      body = converter.convert(body).toString()
 
     parser.write body
     parser.end()
