@@ -1,6 +1,7 @@
 language: node_js
 before_install:
-  - apt-get install libicu-dev
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq libicu-dev
   - npm install -g coffee-script mocha
 before_script:
   - coffee -o ./lib -c -b ./src
