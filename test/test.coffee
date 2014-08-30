@@ -1,7 +1,6 @@
 # test dependency
 path = require 'path'
 assert  = require 'assert'
-csDetector   = require("node-icu-charset-detector")
 
 
 # test framework

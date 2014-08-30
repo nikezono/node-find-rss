@@ -1,14 +1,14 @@
 module.exports = (req,callback)->
   # dependency
   htmlparser = require("htmlparser2")
-  csDetector = require("node-icu-charset-detector")
+  detectEncoding = require("detect-encoding")
   iconv      = require 'iconv'
- 
+
   # utility
   async        = require 'async'
   url          = require 'url'
   request      = require 'request'
-  
+
   # instance property
   candidates   = []
   sitename     = ''
@@ -29,53 +29,54 @@ module.exports = (req,callback)->
   )
 
   # main
-  request.get 
+  request.get
     uri: req
     encoding: null
   , (err,res,body)->
     if err?
-      callback err,null 
+      callback err,null
       return
     obj = url.parse req
-    charset = csDetector.detectCharset(body).toString()
+    detectEncoding body,(err,result)->
+      charset = result
 
-    if charset isnt ('utf-8' or 'UTF-8')
-      converter = new iconv.Iconv(charset,'utf-8')
-      body = converter.convert(body).toString()
+      if charset isnt ('utf-8' or 'UTF-8')
+        converter = new iconv.Iconv(charset,'utf-8')
+        body = converter.convert(body).toString()
 
-    parser.write body
-    parser.end()
+      parser.write body
+      parser.end()
 
-    async.forEach candidates,(cand,cb)->
-      # sitename
-      cand.sitename = sitename
+      async.forEach candidates,(cand,cb)->
+        # sitename
+        cand.sitename = sitename
 
-      # url(href)
-      if cand.href.match /[http|https]:\/\//
-        cand.url = cand.href
-      else
-        cand.url = "#{obj.protocol}//#{obj.host}#{cand.href}"
-
-      # favicon
-      if favicon.length > 0
-        if favicon.match /[http|https]:\/\//
-          cand.favicon = favicon
-          cb()
+        # url(href)
+        if cand.href.match /[http|https]:\/\//
+          cand.url = cand.href
         else
-          if favicon.charAt(0) is '/'
-            cand.favicon = "#{obj.protocol}//#{obj.host}#{favicon}"
+          cand.url = "#{obj.protocol}//#{obj.host}#{cand.href}"
+
+        # favicon
+        if favicon.length > 0
+          if favicon.match /[http|https]:\/\//
+            cand.favicon = favicon
             cb()
           else
-            cand.favicon = "#{obj.protocol}//#{obj.host}/#{favicon}"
-            cb()
+            if favicon.charAt(0) is '/'
+              cand.favicon = "#{obj.protocol}//#{obj.host}#{favicon}"
+              cb()
+            else
+              cand.favicon = "#{obj.protocol}//#{obj.host}/#{favicon}"
+              cb()
 
-      else
-        guess = "#{obj.protocol}//#{obj.host}/favicon.ico"
-        request guess, (err,res,body)->
-          cand.favicon = guess if res.statusCode is 200
-          cb()
-    ,->
-      if candidates.length is 0
-        callback 'no such rss feeds.',null 
-      else
-        callback null,candidates
+        else
+          guess = "#{obj.protocol}//#{obj.host}/favicon.ico"
+          request guess, (err,res,body)->
+            cand.favicon = guess if res.statusCode is 200
+            cb()
+      ,->
+        if candidates.length is 0
+          callback 'no such rss feeds.',null
+        else
+          callback null,candidates

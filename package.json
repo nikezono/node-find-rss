@@ -5,10 +5,10 @@
   "author": "nikezono",
   "dependencies": {
     "async": "*",
+    "detect-encoding": "0.0.3",
     "htmlparser2": "*",
-    "request": "*",
-    "node-icu-charset-detector": "*",
-    "iconv": "*"
+    "iconv": "^2.1.4",
+    "request": "*"
   },
   "devDependencies": {
     "coffee-script": "*"
@@ -26,7 +26,7 @@
   "main": "lib/find-rss.js",
   "scripts": {
     "test": "cake test"
-    },
+  },
   "engines": {
     "node": "*"
   },
