@@ -1,7 +1,7 @@
 module.exports = (req,callback)->
   # dependency
   htmlparser = require("htmlparser2")
-  detectEncoding = require("detect-encoding")
+  jschardet  = require("jschardet")
   iconv      = require 'iconv'
 
   # utility
@@ -37,46 +37,45 @@ module.exports = (req,callback)->
       callback err,null
       return
     obj = url.parse req
-    detectEncoding body,(err,result)->
-      charset = result
+    charset = jschardet.detect(body).encoding
 
-      if charset isnt ('utf-8' or 'UTF-8')
-        converter = new iconv.Iconv(charset,'utf-8')
-        body = converter.convert(body).toString()
+    if charset isnt ('utf-8' or 'UTF-8')
+      converter = new iconv.Iconv(charset,'utf-8')
+      body = converter.convert(body).toString()
 
-      parser.write body
-      parser.end()
+    parser.write body
+    parser.end()
 
-      async.forEach candidates,(cand,cb)->
-        # sitename
-        cand.sitename = sitename
+    async.forEach candidates,(cand,cb)->
+      # sitename
+      cand.sitename = sitename
 
-        # url(href)
-        if cand.href.match /[http|https]:\/\//
-          cand.url = cand.href
+      # url(href)
+      if cand.href.match /[http|https]:\/\//
+        cand.url = cand.href
+      else
+        cand.url = "#{obj.protocol}//#{obj.host}#{cand.href}"
+
+      # favicon
+      if favicon.length > 0
+        if favicon.match /[http|https]:\/\//
+          cand.favicon = favicon
+          cb()
         else
-          cand.url = "#{obj.protocol}//#{obj.host}#{cand.href}"
-
-        # favicon
-        if favicon.length > 0
-          if favicon.match /[http|https]:\/\//
-            cand.favicon = favicon
+          if favicon.charAt(0) is '/'
+            cand.favicon = "#{obj.protocol}//#{obj.host}#{favicon}"
             cb()
           else
-            if favicon.charAt(0) is '/'
-              cand.favicon = "#{obj.protocol}//#{obj.host}#{favicon}"
-              cb()
-            else
-              cand.favicon = "#{obj.protocol}//#{obj.host}/#{favicon}"
-              cb()
-
-        else
-          guess = "#{obj.protocol}//#{obj.host}/favicon.ico"
-          request guess, (err,res,body)->
-            cand.favicon = guess if res.statusCode is 200
+            cand.favicon = "#{obj.protocol}//#{obj.host}/#{favicon}"
             cb()
-      ,->
-        if candidates.length is 0
-          callback 'no such rss feeds.',null
-        else
-          callback null,candidates
+
+      else
+        guess = "#{obj.protocol}//#{obj.host}/favicon.ico"
+        request guess, (err,res,body)->
+          cand.favicon = guess if res.statusCode is 200
+          cb()
+    ,->
+      if candidates.length is 0
+        callback 'no such rss feeds.',null
+      else
+        callback null,candidates
