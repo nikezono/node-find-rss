@@ -7,8 +7,11 @@ node_js:
   - "0.10"
 script:
   - grunt travis
+after_script:
+  - cat coverage/lcov.info | codeclimate
 notifications:
   slack:
     masuilab:p4zvcihWTFLz1KwJXYGwJgeZ
-env:
-  - COVERALLS_SERVICE_NAME=travis-ci COVERALLS_REPO_TOKEN=76cwyyf4XZJNn9YNUMd83fepgMOqwHyOQ
+addons:
+  code_climate:
+    repo_token:33e8f82a9ab973a223787487206a03312d98a161f07105793c293307c943b16d

@@ -11,6 +11,7 @@
     "request": "*"
   },
   "devDependencies": {
+    "codeclimate-test-reporter": "0.0.3",
     "coffee-errors": "^0.8.6",
     "coffee-script": "*",
     "coffeelint": "^1.6.0",
@@ -21,7 +22,6 @@
     "grunt-contrib-coffee": "^0.11.1",
     "grunt-contrib-copy": "^0.6.0",
     "grunt-contrib-watch": "^0.6.1",
-    "grunt-coveralls": "^1.0.0",
     "grunt-mocha-test": "^0.12.0",
     "grunt-notify": "^0.3.1",
     "mocha": "^1.21.4",
