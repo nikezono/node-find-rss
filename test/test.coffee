@@ -3,7 +3,7 @@ path = require 'path'
 assert  = require 'assert'
 
 # test framework
-finder = require path.resolve('lib','find-rss')
+finder = require '../lib/find-rss'
 
 # test Property
 nikezono     = "http://github.com/nikezono"
@@ -62,5 +62,4 @@ describe "find-rss", ->
   it "文字化けしない", (done)->
     finder livedoor,(e,candidates)->
       #テストできない
-      console.log candidates[0].title
       done()

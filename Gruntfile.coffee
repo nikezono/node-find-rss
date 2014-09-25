@@ -2,6 +2,7 @@
 
 module.exports = (grunt) ->
 
+  _ = require 'underscore'
   require 'coffee-errors'
 
   grunt.loadNpmTasks 'grunt-contrib-watch'
@@ -101,7 +102,6 @@ module.exports = (grunt) ->
         options:
           reporter: 'mocha-lcov-reporter'
           timeout: 50000
-          quiet: true
           captureFile: 'coverage/lcov.info'
         src: ['coverage/test/**/*.coffee']
 
