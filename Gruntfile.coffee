@@ -11,13 +11,12 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-clean'
   grunt.loadNpmTasks 'grunt-contrib-copy'
   grunt.loadNpmTasks 'grunt-mocha-test'
-  grunt.loadNpmTasks 'grunt-blanket'
+  grunt.loadNpmTasks 'grunt-istanbul'
   grunt.loadNpmTasks 'grunt-notify'
 
-  grunt.registerTask 'test',     [ 'coffeelint','coffee', 'mochaTest:spec' ]
-  grunt.registerTask 'coverage', [ 'clean', 'blanket', 'copy','mochaTest:coverage' ]
-  grunt.registerTask 'coverdump',       [ 'clean', 'blanket', 'copy','mochaTest:coverdump']
-  grunt.registerTask 'travis',   [ 'test','coverdump']
+  grunt.registerTask 'test',     [ 'coffeelint','coffee:multiple', 'mochaTest:spec' ]
+  grunt.registerTask 'coverage', [ 'clean','copy', 'instrument', 'mochaTest:coverage', 'storeCoverage', 'makeReport']
+  grunt.registerTask 'travis',   [ 'test','coverage']
   grunt.registerTask 'default',  [ 'test', 'watch' ]
 
   grunt.initConfig
@@ -67,19 +66,37 @@ module.exports = (grunt) ->
         src:'*.coffee'
         dest:'lib/'
         ext:'.js'
+      test:
+        expand:true
+        cwd:'test'
+        src:'*.coffee'
+        dest:'coverage/test/'
+        ext:'.js'
+      test_lib:
+        expand:true
+        cwd:'src'
+        src:'*.coffee'
+        dest:'coverage/lib/'
+        ext:'.js'
+
+    copy:
+      coverage:
+        files: [
+          expand: true
+          src: ['test/*']
+          dest: 'coverage/instrument/'
+        ]
 
     clean:
       coverage:
         src: ['coverage/']
 
-    copy:
-      coverage:
-        src: ['test/**']
-        dest: 'coverage/'
-
-    blanket:
-      coverage:
-        files:'coverage/lib':['lib/']
+    # Istanbul(MochaTest+Coverage Report)
+    instrument:
+      files: "lib/*.js"
+      options:
+        lazy: true
+        basePath: "coverage/instrument/"
 
     mochaTest:
       spec:
@@ -88,18 +105,20 @@ module.exports = (grunt) ->
           timeout: 50000
           colors: true
         src: ['test/**/*.coffee']
-
       coverage:
         options:
-          reporter:"html-cov"
+          reporter:"spec"
           timeout: 50000
-          captureFile: 'coverage/coverage.html'
-          quiet:true
-        src: ['coverage/test/**/*.coffee']
+          colors:true
+        src: ['coverage/instrument/test/*.coffee']
 
-      coverdump:
-        options:
-          reporter: 'mocha-lcov-reporter'
-          timeout: 50000
-          captureFile: 'coverage/lcov.info'
-        src: ['coverage/test/**/*.coffee']
+    storeCoverage:
+      options:
+        dir: "coverage/reports"
+
+    makeReport:
+      src: "coverage/reports/**/*.json"
+      options:
+        type: "lcov"
+        dir: "coverage/reports"
+        print: "detail"
