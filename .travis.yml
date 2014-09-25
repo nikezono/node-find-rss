@@ -1,11 +1,14 @@
 language: node_js
 before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq libicu-dev
-  - npm install -g coffee-script mocha
+  - npm install -g grunt grunt-cli
 before_script:
-  - coffee -o ./lib -c -b ./src
+  - grunt coffee
 node_js:
   - "0.10"
-  - "0.8"
-  - "0.6"
+script:
+  - grunt travis
+notifications:
+  slack:
+    masuilab:p4zvcihWTFLz1KwJXYGwJgeZ
+env:
+  - COVERALLS_SERVICE_NAME=travis-ci COVERALLS_REPO_TOKEN=76cwyyf4XZJNn9YNUMd83fepgMOqwHyOQ

@@ -17,9 +17,25 @@ module.exports = (req,callback)->
 
   parser = new htmlparser.Parser(
     onopentag: (name, attr) ->
-      candidates.push attr if name is "link" and attr.type is "application/rss+xml" or attr.type is "application/atom+xml"
-      favicon = attr.href if name is 'link' and (attr.rel is 'icon' or attr.rel is 'shortcut icon' or attr.type is 'image/x-icon')
-      sitenameFlag = true if name is "title"
+      if(
+        name is "link" and
+        (
+          attr.type is "application/rss+xml" or
+          attr.type is "application/atom+xml"
+        )
+      )
+        candidates.push attr
+      if (
+        name is 'link' and
+        (
+          attr.rel is 'icon' or
+          attr.rel is 'shortcut icon' or
+          attr.type is 'image/x-icon'
+        )
+      )
+        favicon = attr.href
+      if name is "title"
+        sitenameFlag = true
 
     ontext: (text)->
       sitename = text if sitenameFlag
@@ -76,6 +92,6 @@ module.exports = (req,callback)->
           cb()
     ,->
       if candidates.length is 0
-        callback 'no such rss feeds.',null
+        callback new Error('NotFoundRSSFeedError'),null
       else
         callback null,candidates
