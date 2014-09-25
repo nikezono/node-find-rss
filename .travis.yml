@@ -12,6 +12,6 @@ after_script:
 notifications:
   slack:
     masuilab:p4zvcihWTFLz1KwJXYGwJgeZ
-addons:
-  code_climate:
-    repo_token:33e8f82a9ab973a223787487206a03312d98a161f07105793c293307c943b16d
+env:
+  CODECLIMATE_REPO_TOKEN:33e8f82a9ab973a223787487206a03312d98a161f07105793c293307c943b16d
+
