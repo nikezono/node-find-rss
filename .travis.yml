@@ -8,7 +8,7 @@ node_js:
 script:
   - grunt travis
 after_script:
-  - cat coverage/lcov.info | codeclimate
+  - cat coverage/reports/lcov.info | codeclimate
 notifications:
   slack:
     masuilab:p4zvcihWTFLz1KwJXYGwJgeZ
