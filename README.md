@@ -1,4 +1,4 @@
-node-find-rss [![Build Status](https://travis-ci.org/nikezono/node-find-rss.png)](https://travis-ci.org/nikezono/node-find-rss)[![Coverage Status](https://coveralls.io/repos/nikezono/node-find-rss/badge.png?branch=6_detectselv)](https://coveralls.io/r/nikezono/node-find-rss?branch=master)[![Code Climate](https://codeclimate.com/github/nikezono/node-find-rss/badges/gpa.svg)](https://codeclimate.com/github/nikezono/node-find-rss)
+node-find-rss [![Build Status](https://travis-ci.org/nikezono/node-find-rss.png)](https://travis-ci.org/nikezono/node-find-rss)[![Test Coverage](https://codeclimate.com/github/nikezono/node-find-rss/badges/coverage.svg)](https://codeclimate.com/github/nikezono/node-find-rss)[![Code Climate](https://codeclimate.com/github/nikezono/node-find-rss/badges/gpa.svg)](https://codeclimate.com/github/nikezono/node-find-rss)
 ---
 
 [![NPM](https://nodei.co/npm/find-rss.png)](https://nodei.co/npm/find-rss/)
