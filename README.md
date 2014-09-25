@@ -1,9 +1,9 @@
-node-find-rss [![Build Status](https://travis-ci.org/nikezono/node-find-rss.png)](https://travis-ci.org/nikezono/node-find-rss)
+node-find-rss [![Build Status](https://travis-ci.org/nikezono/node-find-rss.png)](https://travis-ci.org/nikezono/node-find-rss)[![Coverage Status](https://coveralls.io/repos/nikezono/node-find-rss/badge.png?branch=6_detectselv)](https://coveralls.io/r/nikezono/node-find-rss?branch=master)[![Code Climate](https://codeclimate.com/github/nikezono/node-find-rss/badges/gpa.svg)](https://codeclimate.com/github/nikezono/node-find-rss)
 ---
 
 [![NPM](https://nodei.co/npm/find-rss.png)](https://nodei.co/npm/find-rss/)
 
-find rss feeds in url
+RSS/Atom feed URL Candidates finder
 
 wrapper of [htmlparser2](https://github.com/fb55/htmlparser2)
 
@@ -32,11 +32,3 @@ wrapper of [htmlparser2](https://github.com/fb55/htmlparser2)
             href: 'http://images.apple.com/main/rss/hotnews/hotnews.rss',
             favicon: 'http://www.apple.com/favicon.ico',
             url: 'http://images.apple.com/main/rss/hotnews/hotnews.rss' } ]
-##dependency
-node-find-rss uses [node-icu-charset-detector](https://github.com/mooz/node-icu-charset-detector),and require **livicu-dev** or **icu4c**.
-
-    # ubuntu and debian-based systems
-    apt-get install libicu-dev
-    # os x
-    port install icu +devel                 # with macports
-    brew install icu4c && brew link icu4c   # homebrew
