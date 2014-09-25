@@ -2,16 +2,18 @@
 path = require 'path'
 assert  = require 'assert'
 
-
 # test framework
-finder = require path.resolve('lib','find-rss')
+finder = require '../lib/find-rss'
 
 # test Property
-shokai   = "http://shokai.org/blog/"
-shokai2  = "http://shokai.org/blog"
-apple    = "http://www.apple.com/"
-livedoor = "http://news.livedoor.com/"
-geta6    = "http://blog.geta6.net"
+nikezono     = "http://github.com/nikezono"
+nikezono2    = "http://github.com/nikezono/"
+nikezonoAtom = "http://github.com/nikezono.atom"
+apple        = "http://www.apple.com/"
+livedoor     = "http://news.livedoor.com/"
+nhk          = "http://www.nhk.or.jp"
+
+
 # findRSS
 describe "find-rss", ->
 
@@ -20,33 +22,26 @@ describe "find-rss", ->
       assert.equal candidates,null
       assert.equal e?, true
 
-  it 'geta6' ,(done)->
-    finder geta6,(e,candidates)->
-      console.log e if e?
+  it 'github/nikezono' ,(done)->
+    finder nikezono,(e,candidates)->
       assert.equal candidates.length,1
       assert.equal e?, false
       done()
 
   it 'サイト名が保存されている' ,(done)->
     finder apple,(e,candidates)->
-      console.log e if e?
       assert.equal candidates[0].sitename, 'Apple'
       assert.equal e?, false
       done()
 
   it "atomが返せる",(done)->
-    finder shokai,(e,candidates)->
+    finder nikezono,(e,candidates)->
       assert.equal candidates.length,1
       done()
 
   it "リダイレクト対応",(done)->
-    finder shokai2,(e,candidates)->
+    finder nikezono2,(e,candidates)->
       assert.equal candidates.length,1
-      done()
-
-  it "rss/xmlが返せる",(done) ->
-    finder apple,(e,candidates)->
-      assert.equal candidates?,true
       done()
 
   it "複数のRSSを配列にしまえる",(done)->
@@ -60,12 +55,11 @@ describe "find-rss", ->
       done()
 
   it "faviconを自動で探索する", (done)->
-    finder shokai,(e,candidates)->
-      assert.equal candidates[0].favicon,'http://shokai.org/favicon.ico'
+    finder apple,(e,candidates)->
+      assert.equal candidates[0].favicon,'http://www.apple.com/favicon.ico'
       done()
 
   it "文字化けしない", (done)->
     finder livedoor,(e,candidates)->
       #テストできない
-      console.log candidates[0].title
       done()
