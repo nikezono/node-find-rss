@@ -21,7 +21,7 @@ describe "find-rss", ->
     finder "egergre",(e,candidates)->
       assert.equal candidates,null
       assert.equal e?, true
-###
+
   it 'github/nikezono' ,(done)->
     finder nikezono,(e,candidates)->
       assert.equal candidates.length,1
@@ -63,4 +63,3 @@ describe "find-rss", ->
     finder livedoor,(e,candidates)->
       #テストできない
       done()
-###
