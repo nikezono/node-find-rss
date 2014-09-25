@@ -13,11 +13,10 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-mocha-test'
   grunt.loadNpmTasks 'grunt-blanket'
   grunt.loadNpmTasks 'grunt-notify'
-  grunt.loadNpmTasks 'grunt-coveralls'
 
   grunt.registerTask 'test',     [ 'coffeelint','coffee', 'mochaTest:spec' ]
   grunt.registerTask 'coverage', [ 'clean', 'blanket', 'copy','mochaTest:coverage' ]
-  grunt.registerTask 'ci',       [ 'clean', 'blanket', 'copy','mochaTest:coverdump','coveralls']
+  grunt.registerTask 'ci',       [ 'clean', 'blanket', 'copy','mochaTest:coverdump']
   grunt.registerTask 'travis',   [ 'test','ci']
   grunt.registerTask 'default',  [ 'test', 'watch' ]
 
