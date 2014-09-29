@@ -1,4 +1,5 @@
 module.exports = (req,callback)->
+
   # dependency
   htmlparser = require("htmlparser2")
   jschardet  = require("jschardet")
@@ -20,8 +21,19 @@ module.exports = (req,callback)->
       if(
         name is "link" and
         (
-          attr.type is "application/rss+xml" or
-          attr.type is "application/atom+xml"
+          ['application/rss+xml',
+          'application/atom+xml',
+          'application/rdf+xml',
+          'application/rss',
+          'application/atom',
+          'application/rdf',
+          'text/rss+xml',
+          'text/atom+xml',
+          'text/rdf+xml',
+          'text/rss',
+          'text/atom',
+          'text/rdf',
+          ].indexOf(attr.type) >= 0
         )
       )
         candidates.push attr
@@ -58,6 +70,8 @@ module.exports = (req,callback)->
     if charset isnt ('utf-8' or 'UTF-8')
       converter = new iconv.Iconv(charset,'utf-8')
       body = converter.convert(body).toString()
+
+    # リクエストされたURLが既にRSSフィードと思われる場合
 
     parser.write body
     parser.end()
