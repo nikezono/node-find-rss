@@ -8,10 +8,12 @@ finder = require '../lib/find-rss'
 # test Property
 nikezono     = "http://github.com/nikezono"
 nikezono2    = "http://github.com/nikezono/"
-nikezonoAtom = "http://github.com/nikezono.atom"
+nikezonoAtom = "http://nikezono.com/atom.xml"
 apple        = "http://www.apple.com/"
 livedoor     = "http://news.livedoor.com/"
 nhk          = "http://www.nhk.or.jp"
+rdf          = "http://www.asahi.com/information/service/rss.html"
+
 
 
 # findRSS
@@ -59,7 +61,13 @@ describe "find-rss", ->
       assert.equal candidates[0].favicon,'http://www.apple.com/favicon.ico'
       done()
 
-  it "文字化けしない", (done)->
-    finder livedoor,(e,candidates)->
-      #テストできない
+  it "RSSフィードが指定された場合、それをそのまま返す",(done)->
+    finder nikezonoAtom,(e,candidates)->
+      assert.equal candidates.length,1
+      assert.equal candidates[0].url,nikezonoAtom
+      done()
+
+  it "RSS 1.0 / RDF",(done)->
+    finder rdf,(e,candidates)->
+      assert.ok candidates.length > 0
       done()

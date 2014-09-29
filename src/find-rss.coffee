@@ -1,4 +1,5 @@
 module.exports = (req,callback)->
+
   # dependency
   htmlparser = require("htmlparser2")
   jschardet  = require("jschardet")
@@ -14,14 +15,28 @@ module.exports = (req,callback)->
   sitename     = ''
   sitenameFlag = false
   favicon      = ''
+  argumentIsCandidate = false
 
   parser = new htmlparser.Parser(
     onopentag: (name, attr) ->
+
+      argumentIsCandidate = true if name is "feed" and attr.xmlns?
       if(
         name is "link" and
         (
-          attr.type is "application/rss+xml" or
-          attr.type is "application/atom+xml"
+          ['application/rss+xml',
+          'application/atom+xml',
+          'application/rdf+xml',
+          'application/rss',
+          'application/atom',
+          'application/rdf',
+          'text/rss+xml',
+          'text/atom+xml',
+          'text/rdf+xml',
+          'text/rss',
+          'text/atom',
+          'text/rdf',
+          ].indexOf(attr.type) >= 0
         )
       )
         candidates.push attr
@@ -59,12 +74,22 @@ module.exports = (req,callback)->
       converter = new iconv.Iconv(charset,'utf-8')
       body = converter.convert(body).toString()
 
+    # HTMLParser
     parser.write body
     parser.end()
 
+    # リクエストされたURLが既にRSSフィードと思われる場合
+    if argumentIsCandidate
+      candidates = [
+        title:req
+        sitename:req
+        url:req
+        href:req
+      ]
+
     async.forEach candidates,(cand,cb)->
       # sitename
-      cand.sitename = sitename
+      cand.sitename ||= sitename
 
       # url(href)
       if cand.href.match /[http|https]:\/\//
