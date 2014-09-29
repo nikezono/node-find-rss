@@ -12,6 +12,8 @@ nikezonoAtom = "http://nikezono.com/atom.xml"
 apple        = "http://www.apple.com/"
 livedoor     = "http://news.livedoor.com/"
 nhk          = "http://www.nhk.or.jp"
+rdf          = "http://www.asahi.com/information/service/rss.html"
+
 
 
 # findRSS
@@ -65,5 +67,7 @@ describe "find-rss", ->
       assert.equal candidates[0].url,nikezonoAtom
       done()
 
-  it "RSS 1.0",(done)->
-    done()
+  it "RSS 1.0 / RDF",(done)->
+    finder rdf,(e,candidates)->
+      assert.ok candidates.length > 0
+      done()

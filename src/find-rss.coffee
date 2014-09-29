@@ -15,9 +15,12 @@ module.exports = (req,callback)->
   sitename     = ''
   sitenameFlag = false
   favicon      = ''
+  argumentIsCandidate = false
 
   parser = new htmlparser.Parser(
     onopentag: (name, attr) ->
+
+      argumentIsCandidate = true if name is "feed" and attr.xmlns?
       if(
         name is "link" and
         (
@@ -71,14 +74,22 @@ module.exports = (req,callback)->
       converter = new iconv.Iconv(charset,'utf-8')
       body = converter.convert(body).toString()
 
-    # リクエストされたURLが既にRSSフィードと思われる場合
-
+    # HTMLParser
     parser.write body
     parser.end()
 
+    # リクエストされたURLが既にRSSフィードと思われる場合
+    if argumentIsCandidate
+      candidates = [
+        title:req
+        sitename:req
+        url:req
+        href:req
+      ]
+
     async.forEach candidates,(cand,cb)->
       # sitename
-      cand.sitename = sitename
+      cand.sitename ||= sitename
 
       # url(href)
       if cand.href.match /[http|https]:\/\//
