@@ -77,3 +77,13 @@ describe "find-rss", ->
     finder shokai,(e,candidates)->
       assert.ok candidates.length > 0
       done()
+
+  it "feedのタイトルを正確に取得できる",(done)->
+    finder nikezono, (e,candidates)->
+      assert.equal candidates[0].title, "nikezono&#39;s Activity"
+      done()
+
+  it "feedのタイトルを正確に取得できる2",(done)->
+    finder nikezonoAtom,(e,candidates)->
+      assert.equal candidates[0].title, "nikezono.net"
+      done()
