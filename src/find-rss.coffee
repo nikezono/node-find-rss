@@ -20,7 +20,7 @@ module.exports = (req,callback)->
   parser = new htmlparser.Parser(
     onopentag: (name, attr) ->
 
-      argumentIsCandidate = true if name is "feed" and attr.xmlns?
+      argumentIsCandidate = true if ["feed","rss","atom"].indexOf(name) > -1
       if(
         name is "link" and
         (
