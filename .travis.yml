@@ -9,7 +9,6 @@ script:
   - grunt travis
 after_script:
   - CODECLIMATE_REPO_TOKEN=33e8f82a9ab973a223787487206a03312d98a161f07105793c293307c943b16d codeclimate < coverage/reports/lcov.info
-
 notifications:
   slack:
     masuilab:p4zvcihWTFLz1KwJXYGwJgeZ

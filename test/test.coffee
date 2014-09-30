@@ -9,6 +9,7 @@ finder = require '../lib/find-rss'
 nikezono     = "http://github.com/nikezono"
 nikezono2    = "http://github.com/nikezono/"
 nikezonoAtom = "http://nikezono.com/atom.xml"
+shokai       = "http://shokai.org/blog/feed"
 apple        = "http://www.apple.com/"
 livedoor     = "http://news.livedoor.com/"
 nhk          = "http://www.nhk.or.jp"
@@ -69,5 +70,10 @@ describe "find-rss", ->
 
   it "RSS 1.0 / RDF",(done)->
     finder rdf,(e,candidates)->
+      assert.ok candidates.length > 0
+      done()
+
+  it "開始タグが'rss'でも読める'",(done)->
+    finder shokai,(e,candidates)->
       assert.ok candidates.length > 0
       done()
