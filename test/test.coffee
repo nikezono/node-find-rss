@@ -53,7 +53,7 @@ describe "find-rss", ->
       # @note:2014/10/14付けでhtmlにfaviconの場所が書いてない
       finder "http://apple.com",(error,candidates)->
         assert.equal error,null
-        assert.equal candidates[0].favicon?,false
+        assert.equal candidates[0].favicon, ''
         done()
 
     it "正常系:getDetail:Detail:false",(done)->

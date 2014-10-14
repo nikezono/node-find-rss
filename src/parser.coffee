@@ -21,7 +21,8 @@ module.exports = exports = (htmlBody,callback)->
     onopentag: (name, attr) ->
 
       # 入力されたtextが既にfeed
-      argumentIsCandidate = true if ["feed","rss","atom"].indexOf(name) > -1
+      if /(feed)|(atom)|(rdf)|(rss)/.test name
+        argumentIsCandidate = true
 
       # linkタグの中に以下のtypeを含むものがあれば候補とする
       if(
@@ -90,6 +91,7 @@ module.exports = exports = (htmlBody,callback)->
 
     for cand in candidates
       cand.sitename = sitename
+      cand.favicon  = favicon
 
     return callback null,candidates
 

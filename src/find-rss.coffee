@@ -57,9 +57,9 @@ module.exports = finder = (req,callback)->
         return _cb() if err
 
         parser body,(error,cands)->
-          return _cb() if err
+          return _cb() if error
 
-          # 取得しておいたパラメタをを代入
+          # 取得しておいたパラメタを代入
           cands[0].favicon = cand.favicon
           cands[0].sitename = cand.sitename
           newCandidates.push cands[0]
