@@ -1,159 +1,110 @@
 # dependency
-htmlparser = require("htmlparser2")
 jschardet  = require("jschardet")
 iconv      = require 'iconv'
+request    = require 'request'
+async      = require 'async'
 
 # utility
-async        = require 'async'
-url          = require 'url'
-request      = require 'request'
+url        = require 'url'
 
-module.exports = (req,callback)->
+parser = require "./parser"
 
-  # instance property
-  candidates   = []
-  sitename     = ''
-  sitenameFlag = false
-  favicon      = ''
-  feedTitle    = ''
-  argumentIsCandidate = false
+module.exports = finder = (req,callback)->
 
-  parser = new htmlparser.Parser(
-    onopentag: (name, attr) ->
+  # Options
+  finder.favicon = true unless finder.favicon?
+  finder.getDetail = false unless finder.getDetail?
 
-      argumentIsCandidate = true if ["feed","rss","atom"].indexOf(name) > -1
-      if(
-        name is "link" and
-        (
-          ['application/rss+xml',
-          'application/atom+xml',
-          'application/rdf+xml',
-          'application/rss',
-          'application/atom',
-          'application/rdf',
-          'text/rss+xml',
-          'text/atom+xml',
-          'text/rdf+xml',
-          'text/rss',
-          'text/atom',
-          'text/rdf',
-          ].indexOf(attr.type) >= 0
-        )
-      )
-        candidates.push attr
-      if (
-        name is 'link' and
-        (
-          attr.rel is 'icon' or
-          attr.rel is 'shortcut icon' or
-          attr.type is 'image/x-icon'
-        )
-      )
-        favicon = attr.href
-      if name is "title"
-        sitenameFlag = true
+  return callback new Error("Not HTTP URL is provided."),null unless /^https?/.test req
 
-    ontext: (text)->
-      feedTitle = text if sitename is '' and argumentIsCandidate
-      sitename = text if sitenameFlag
-
-
-    onclosetag: (name)->
-      sitenameFlag = false if name is "title"
-  ,
-    recognizeCDATA:true
-  )
-
-  # main
+  # urlプロパティの決定
   urlObject = url.parse req
-  requestAndEncodeWithDetectCharset req,(err,body)->
-    return callback err,null if err
+  body = ""
+  candidates = []
+  async.series [(cb)->
 
-    # HTMLParser
-    parser.write body
-    parser.end()
+    # HTML/XMLの取得
+    requestAndEncodeWithDetectCharset req,(err,html)->
+      return callback err,null if err
+      body = html
+      cb()
 
-    async.series [(cb)->
-      # リクエストされたURLが既にRSSフィードと思われる場合
-      if argumentIsCandidate
-        candidates = [
-          title:feedTitle
-          sitename:req
-          url:req
-          href:req
-        ]
-        cb()
+  ,(cb)->
 
-      # 候補となるURL配列が取得できた場合
+    # HTML/XMLのParsing
+    parser body,(err,cands)->
+      return callback err,null if err
+      candidates = cands
+      cb()
+
+  ,(cb)->
+
+    for cand in candidates
+
+      if /^https?/.test cand.href
+        cand.url = cand.href
       else
-        async.forEach candidates,(cand,_cb)->
-          cand.sitename = sitename
+        cand.url = "#{urlObject.protocol}//#{urlObject.host}#{cand.href}"
+    cb()
 
-          # url(フルパス)
-          if cand.href.match /[http|https]:\/\//
-            cand.url = cand.href
-          else
-            cand.url = "#{urlObject.protocol}//#{urlObject.host}#{cand.href}"
+  ,(cb)->
 
-          # リクエストしてタイトルを取得する
-          requestAndEncodeWithDetectCharset cand.url,(err,body)->
-            return _cb() if err
+    # 詳細な情報の取得
+    return cb() unless finder.getDetail
+    newCandidates = []
+    async.forEach candidates,(cand,_cb)->
+      requestAndEncodeWithDetectCharset cand.url,(err,body)->
+        return _cb() if err
 
-            innerFeedTitle = ''
-            isFeed = false
-            titleFlag = false
+        parser body,(error,cands)->
+          return _cb() if err
 
-            innerParser = new htmlparser.Parser
-              onopentag: (name, attr) ->
-                isFeed = true if ["feed","rss","atom"].indexOf(name) > -1
-                titleFlag = true if name is "title"
+          newCandidates.push cands[0]
+          return _cb()
+    ,->
+      candidates = newCandidates
+      cb()
 
-              ontext: (text)->
-                innerFeedTitle ||= text if titleFlag and isFeed
+  ,(cb)->
 
-              onclosetag:(name) ->
-                titleFlag = false if name is "title"
-            ,
-              recognizeCDATA:true
+    # faviconの決定
+    return cb() unless finder.favicon
+    async.forEach candidates,(cand,_cb)->
 
-            innerParser.write body
-            innerParser.end()
+      # 取得出来ている場合
+      if cand.favicon?.length > 0
 
-            cand.title = unescape innerFeedTitle
+        # フルパスなら良し
+        if /^https?/.test cand.favicon
+          _cb()
 
-            return _cb()
-        ,->
-          cb()
-    ,(cb)->
-
-      # 全件についてFaviconの決定を行う,見つからない場合は試しにリクエストしてみる
-      async.forEach candidates,(cand,_cb)->
-
-        if favicon.length > 0
-          if favicon.match /[http|https]:\/\//
-            cand.favicon = favicon
-            _cb()
-          else
-            if favicon.charAt(0) is '/'
-              cand.favicon = "#{urlObject.protocol}//#{urlObject.host}#{favicon}"
-              _cb()
-            else
-              cand.favicon = "#{urlObject.protocol}//#{urlObject.host}/#{favicon}"
-              _cb()
-
+        # hrefのみの場合は、urlを作る
         else
-          guess = "#{urlObject.protocol}//#{urlObject.host}/favicon.ico"
-          request guess, (err,res,body)->
-            cand.favicon = guess if res.statusCode is 200
+          if cand.favicon.charAt(0) is '/'
+            cand.favicon = "#{urlObject.protocol}//#{urlObject.host}#{cand.favicon}"
             _cb()
-      ,->
-        cb()
-    ],->
+          else
+            cand.favicon = "#{urlObject.protocol}//#{urlObject.host}/#{cand.favicon}"
+            _cb()
 
-      if candidates.length is 0
-        callback new Error('NotFoundRSSFeedError'),null
+      # 取得できていない場合、/favicon.ico にアクセスしてみる
       else
-        callback null,candidates
+        guess = "#{urlObject.protocol}//#{urlObject.host}/favicon.ico"
+        request guess, (err,res,body)->
+          cand.favicon = guess if res.statusCode is 200
+          _cb()
+    ,->
+      cb()
+  ],->
+
+    if candidates.length is 0
+      return callback new Error('NotFoundRSSFeedError'),null
+    else
+      return callback null,candidates
+
+finder.setOptions = (opts)->
+  finder.getDetail = opts.getDetail if opts.getDetail?
+  finder.favicon  = opts.favicon if opts.favicon?
 
 requestAndEncodeWithDetectCharset = (url,callback)->
   request.get
