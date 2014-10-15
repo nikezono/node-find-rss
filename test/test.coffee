@@ -90,3 +90,16 @@ describe "find-rss", ->
         done()
 
 
+    it "正常系:getDetail:feedを直接読ませる",(done)->
+
+      finder = require '../lib/find-rss'
+      finder.setOptions
+        getDetail:true
+      finder "http://github.com/nikezono.atom",(error,candidates)->
+        assert.equal error,null
+        assert.equal candidates.length,1
+        assert.equal candidates[0].title, "nikezono's Activity"
+        assert.equal candidates[0].url, "http://github.com/nikezono.atom"
+        done()
+
+
