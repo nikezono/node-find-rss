@@ -40,17 +40,24 @@ module.exports = finder = (req,callback)->
   ,(cb)->
 
     for cand in candidates
+      if cand.link?
 
-      if /^https?/.test cand.href
-        cand.url = cand.href
+        cand.url = req
+
       else
-        cand.url = "#{urlObject.protocol}//#{urlObject.host}#{cand.href}"
+
+        if /^https?/.test cand.href
+          cand.url = cand.href
+        else
+          cand.url = "#{urlObject.protocol}//#{urlObject.host}#{cand.href}"
     cb()
 
   ,(cb)->
 
     # 詳細な情報の取得
     return cb() unless finder.getDetail
+
+    return cb() if candidates.length > 0 and candidates[0].link? # 既に詳細情報
     newCandidates = []
     async.forEach candidates,(cand,_cb)->
       requestAndEncodeWithDetectCharset cand.url,(err,body)->
