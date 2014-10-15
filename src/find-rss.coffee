@@ -62,6 +62,7 @@ module.exports = finder = (req,callback)->
           # 取得しておいたパラメタを代入
           cands[0].favicon = cand.favicon
           cands[0].sitename = cand.sitename
+          cands[0].url = cand.url
           newCandidates.push cands[0]
           return _cb()
     ,->

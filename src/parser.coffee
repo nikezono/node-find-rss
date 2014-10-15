@@ -81,7 +81,9 @@ module.exports = exports = (htmlBody,callback)->
       return callback error,null
 
     feedparser.on 'readable',->
-      candidates.push this.meta if candidates.length is 0
+      if candidates.length is 0
+        data = this.meta
+        candidates.push data
 
     feedparser.write htmlBody
     feedparser.end ->

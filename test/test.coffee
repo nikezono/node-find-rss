@@ -78,4 +78,15 @@ describe "find-rss", ->
         assert.equal candidates[0].title,"nikezono's Activity"
         done()
 
+    it "正常系:getDetail:url/sitenameを補完する",(done)->
+
+      finder = require '../lib/find-rss'
+      finder.setOptions
+        getDetail:true
+      finder "http://github.com/nikezono",(error,candidates)->
+        assert.equal error,null
+        assert.equal candidates[0].url,"http://github.com/nikezono.atom"
+        assert.equal candidates[0].sitename,"nikezono (Sho Nakazono) · GitHub"
+        done()
+
 
