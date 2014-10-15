@@ -43,6 +43,7 @@ module.exports = finder = (req,callback)->
       if cand.link?
 
         cand.url = req
+        cand.sitename = cand.title
 
       else
 

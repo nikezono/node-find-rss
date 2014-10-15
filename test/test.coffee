@@ -100,6 +100,7 @@ describe "find-rss", ->
         assert.equal candidates.length,1
         assert.equal candidates[0].title, "nikezono's Activity"
         assert.equal candidates[0].url, "http://github.com/nikezono.atom"
+        assert.equal candidates[0].sitename,"nikezono's Activity" # 同じものが入る
         done()
 
 
