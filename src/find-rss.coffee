@@ -104,7 +104,8 @@ module.exports = finder = (req,callback)->
       else
         guess = "#{urlObject.protocol}//#{urlObject.host}/favicon.ico"
         request guess, (err,res,body)->
-          cand.favicon = guess if res.statusCode is 200
+          return _cb if err or res?.statusCode isnt 200
+          cand.favicon = guess
           _cb()
     ,->
       cb()

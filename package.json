@@ -1,7 +1,7 @@
 {
   "name": "find-rss",
   "description": "find rss feeds",
-  "version": "1.5.6",
+  "version": "1.5.7",
   "author": "nikezono",
   "dependencies": {
     "async": "*",
