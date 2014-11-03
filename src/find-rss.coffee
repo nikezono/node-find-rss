@@ -131,7 +131,7 @@ requestAndEncodeWithDetectCharset = (url,callback)->
       return callback new Error('NotFoundEncodingError'),null
 
     if charset isnt ('utf-8' or 'UTF-8')
-      converter = new iconv.Iconv(charset,'utf-8')
+      converter = new iconv.Iconv(charset,'utf-8//TRANSLIT//IGNORE')
       body = converter.convert(body).toString()
 
     return callback null,body
