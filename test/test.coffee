@@ -112,7 +112,6 @@ describe "find-rss", ->
         favicon:true
       finder "http://www.nhk.or.jp",(error,candidates)->
         assert.equal error,null
-        assert.equal candidates[0].title, "NHKニュース"
         assert.equal candidates[0].url, "http://www.nhk.or.jp/rss/news/cat0.xml"
         assert.equal candidates[0].sitename,"NHKオンライン" # 同じものが入る
         assert.equal candidates[0].favicon,"http://www.nhk.or.jp/favicon.ico"
