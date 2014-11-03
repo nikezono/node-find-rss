@@ -25,7 +25,7 @@ module.exports = finder = (req,callback)->
 
     # HTML/XMLの取得
     requestAndEncodeWithDetectCharset req,(err,html)->
-      return callback err,null if err
+      return cb err if err
       body = html
       cb()
 
@@ -33,7 +33,7 @@ module.exports = finder = (req,callback)->
 
     # HTML/XMLのParsing
     parser body,(err,cands)->
-      return callback err,null if err
+      return cb err if err
       candidates = cands
       cb()
 
@@ -82,8 +82,7 @@ module.exports = finder = (req,callback)->
 
     # faviconの決定
     return cb() unless finder.favicon
-    async.forEach candidates,(cand,_cb)->
-
+    async.each candidates,(cand,_cb)->
       # 取得出来ている場合
       if cand.favicon?.length > 0
 
@@ -109,10 +108,10 @@ module.exports = finder = (req,callback)->
           _cb()
     ,->
       cb()
-  ],->
+  ],(err)->
 
-    if candidates.length is 0
-      return callback new Error('NotFoundRSSFeedError'),null
+    if err
+      return callback err,null
     else
       return callback null,candidates
 
@@ -135,5 +134,5 @@ requestAndEncodeWithDetectCharset = (url,callback)->
       converter = new iconv.Iconv(charset,'utf-8')
       body = converter.convert(body).toString()
 
-    callback null,body
+    return callback null,body
 
