@@ -17,24 +17,33 @@ describe "find-rss", ->
       finder "https://github.com/nikezono",(error,candidates)->
 
         assert.equal error,null
-        assert.equal candidates.length,1
-        assert.equal candidates[0].url, "https://github.com/nikezono.atom"
+        hasUrl =
+          candidates
+            .filter (i) -> i.url is "https://github.com/nikezono.atom"
+            .length > 0
+        assert.ok hasUrl
         done()
 
     it "正常系:リダイレクト",(done)->
 
       finder "https://github.com/nikezono/",(error,candidates)->
         assert.equal error,null
-        assert.equal candidates.length,1
-        assert.equal candidates[0].url, "https://github.com/nikezono.atom"
+        hasUrl =
+          candidates
+            .filter (i) -> i.url is "https://github.com/nikezono.atom"
+            .length > 0
+        assert.ok hasUrl
         done()
 
     it "正常系:feedを直接読ませる",(done)->
 
       finder "https://github.com/nikezono.atom",(error,candidates)->
         assert.equal error,null
-        assert.equal candidates.length,1
-        assert.equal candidates[0].title, "nikezono's Activity"
+        hasTitle =
+          candidates
+            .filter (i) -> i.title is "nikezono's Activity"
+            .length > 0
+        assert.ok hasTitle
         done()
 
     it "異常系:URLの接続先が存在しない",(done)->
@@ -65,7 +74,11 @@ describe "find-rss", ->
 
       finder "http://github.com/nikezono",(error,candidates)->
         assert.equal error,null
-        assert.equal candidates[0].title,"atom"
+        hasTitle =
+          candidates
+            .filter (i) -> i.title is 'atom'
+            .length > 0
+        assert.ok hasTitle
         done()
 
 
@@ -76,7 +89,11 @@ describe "find-rss", ->
         getDetail:true
       finder "http://github.com/nikezono",(error,candidates)->
         assert.equal error,null
-        assert.equal candidates[0].title,"nikezono's Activity"
+        hasTitle =
+          candidates
+            .filter (i) -> i.title is "nikezono's Activity"
+            .length > 0
+        assert.ok hasTitle
         done()
 
     it "正常系:getDetail:url/sitenameを補完する",(done)->
@@ -86,8 +103,16 @@ describe "find-rss", ->
         getDetail:true
       finder "http://github.com/nikezono",(error,candidates)->
         assert.equal error,null
-        assert.equal candidates[0].url,"http://github.com/nikezono.atom"
-        assert.equal candidates[0].sitename,"nikezono (Sho Nakazono) · GitHub"
+        hasUrl =
+          candidates
+            .filter (i) -> i.url is "http://github.com/nikezono.atom"
+            .length > 0
+        hasSiteName =
+          candidates
+            .filter (i) -> i.sitename is "nikezono (Sho Nakazono) · GitHub"
+            .length > 0
+        assert.ok hasUrl
+        assert.ok hasSiteName
         done()
 
 
@@ -98,10 +123,22 @@ describe "find-rss", ->
         getDetail:true
       finder "http://github.com/nikezono.atom",(error,candidates)->
         assert.equal error,null
-        assert.equal candidates.length,1
-        assert.equal candidates[0].title, "nikezono's Activity"
-        assert.equal candidates[0].url, "http://github.com/nikezono.atom"
-        assert.equal candidates[0].sitename,"nikezono's Activity" # 同じものが入る
+        assert.ok candidates.length > 0
+        hasTitle =
+          candidates
+            .filter (i) -> i.title is "nikezono's Activity"
+            .length > 0
+        hasUrl =
+          candidates
+            .filter (i) -> i.url is "http://github.com/nikezono.atom"
+            .length > 0
+        hasSiteName =
+          candidates
+            .filter (i) -> i.sitename is "nikezono's Activity" # 同じものが入る
+            .length > 0
+        assert.ok hasTitle
+        assert.ok hasUrl
+        assert.ok hasSiteName
         done()
 
 
@@ -113,9 +150,21 @@ describe "find-rss", ->
         favicon:true
       finder "http://www.nhk.or.jp",(error,candidates)->
         assert.equal error,null
-        assert.equal candidates[0].url, "http://www.nhk.or.jp/rss/news/cat0.xml"
-        assert.equal candidates[0].sitename,"NHKオンライン" # 同じものが入る
-        assert.equal candidates[0].favicon,"http://www.nhk.or.jp/favicon.ico"
+        hasUrl =
+          candidates
+            .filter (i) -> i.url is "http://www.nhk.or.jp/rss/news/cat0.xml"
+            .length > 0
+        hasSiteName =
+          candidates
+            .filter (i) -> i.sitename is "NHKオンライン" # 同じものが入る
+            .length > 0
+        hasFavicon =
+          candidates
+            .filter (i) -> i.favicon is "http://www.nhk.or.jp/favicon.ico"
+            .length > 0
+        assert.ok hasUrl
+        assert.ok hasSiteName
+        assert.ok hasFavicon
         done()
 
 
