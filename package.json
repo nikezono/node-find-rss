@@ -5,10 +5,10 @@
   "author": "nikezono",
   "dependencies": {
     "async": "*",
-    "feedparser": "^0.19.2",
-    "htmlparser2": "^3.7.3",
-    "iconv": "^2.1.4",
-    "jschardet": "^1.1.0",
+    "feedparser": "*",
+    "htmlparser2": "*",
+    "iconv": "*",
+    "jschardet": "*",
     "request": "*"
   },
   "devDependencies": {
@@ -22,7 +22,7 @@
     "grunt-contrib-coffee": "^0.11.1",
     "grunt-contrib-copy": "^0.6.0",
     "grunt-contrib-watch": "^0.6.1",
-    "grunt-istanbul": "^0.3.0",
+    "grunt-istanbul": "*",
     "grunt-mocha-test": "^0.12.0",
     "grunt-notify": "^0.3.1",
     "istanbul": "^0.3.2",
