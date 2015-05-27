@@ -14,23 +14,24 @@ describe "find-rss", ->
   describe "callback:http url", ->
 
     it "正常系:返り値が配列",(done)->
-      finder "http://nikezono.com",(error,candidates)->
+      finder "https://github.com/nikezono",(error,candidates)->
 
         assert.equal error,null
         assert.equal candidates.length,1
-        assert.equal candidates[0].url,"http://nikezono.com/atom.xml"
+        assert.equal candidates[0].url, "https://github.com/nikezono.atom"
         done()
 
     it "正常系:リダイレクト",(done)->
 
-      finder "http://nikezono.com/",(error,candidates)->
+      finder "https://github.com/nikezono/",(error,candidates)->
         assert.equal error,null
         assert.equal candidates.length,1
+        assert.equal candidates[0].url, "https://github.com/nikezono.atom"
         done()
 
     it "正常系:feedを直接読ませる",(done)->
 
-      finder "http://github.com/nikezono.atom",(error,candidates)->
+      finder "https://github.com/nikezono.atom",(error,candidates)->
         assert.equal error,null
         assert.equal candidates.length,1
         assert.equal candidates[0].title, "nikezono's Activity"
