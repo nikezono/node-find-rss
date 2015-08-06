@@ -6,6 +6,8 @@ request = require 'request'
 # test framework
 finder = require '../lib/find-rss'
 
+titleMatcher = (title) -> title.indexOf('nikezono') > -1 && title.indexOf('Activity') > -1
+
 # test property
 body = ""
 
@@ -41,7 +43,7 @@ describe "find-rss", ->
         assert.equal error,null
         hasTitle =
           candidates
-            .filter (i) -> i.title is "nikezono's Activity"
+            .filter (i) -> titleMatcher(i.title)
             .length > 0
         assert.ok hasTitle
         done()
@@ -91,7 +93,7 @@ describe "find-rss", ->
         assert.equal error,null
         hasTitle =
           candidates
-            .filter (i) -> i.title is "nikezono's Activity"
+            .filter (i) -> titleMatcher(i.title)
             .length > 0
         assert.ok hasTitle
         done()
@@ -126,7 +128,7 @@ describe "find-rss", ->
         assert.ok candidates.length > 0
         hasTitle =
           candidates
-            .filter (i) -> i.title is "nikezono's Activity"
+            .filter (i) -> titleMatcher(i.title)
             .length > 0
         hasUrl =
           candidates
@@ -134,7 +136,7 @@ describe "find-rss", ->
             .length > 0
         hasSiteName =
           candidates
-            .filter (i) -> i.sitename is "nikezono's Activity" # 同じものが入る
+            .filter (i) -> titleMatcher(i.sitename) # 同じものが入る
             .length > 0
         assert.ok hasTitle
         assert.ok hasUrl
@@ -166,5 +168,3 @@ describe "find-rss", ->
         assert.ok hasSiteName
         assert.ok hasFavicon
         done()
-
-

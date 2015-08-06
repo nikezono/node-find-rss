@@ -7,7 +7,7 @@
     "async": "*",
     "feedparser": "*",
     "htmlparser2": "*",
-    "iconv": "*",
+    "iconv-lite": "^0.4.11",
     "jschardet": "*",
     "request": "*"
   },
