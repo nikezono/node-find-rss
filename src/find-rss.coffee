@@ -10,15 +10,21 @@ url        = require 'url'
 parser = require "./parser"
 
 module.exports = finder = (req,callback)->
+  if typeof req == "string"
+    req = {
+      url: req
+    }
+
+  req.encoding = null
 
   # Options
   finder.favicon = true unless finder.favicon?
   finder.getDetail = false unless finder.getDetail?
 
-  return callback new Error("Not HTTP URL is provided."),null unless /^https?/.test req
+  return callback new Error("Not HTTP URL is provided."),null unless /^https?/.test req.url
 
   # urlプロパティの決定
-  urlObject = url.parse req
+  urlObject = url.parse req.url
   body = ""
   candidates = []
   async.series [(cb)->
@@ -42,7 +48,7 @@ module.exports = finder = (req,callback)->
     for cand in candidates
       if cand.link?
 
-        cand.url = req
+        cand.url = req.url
         cand.sitename = cand.title
 
       else
@@ -61,7 +67,8 @@ module.exports = finder = (req,callback)->
     return cb() if candidates.length > 0 and candidates[0].link? # 既に詳細情報
     newCandidates = []
     async.forEach candidates,(cand,_cb)->
-      requestAndEncodeWithDetectCharset cand.url,(err,body)->
+      req.url = cand.url
+      requestAndEncodeWithDetectCharset req,(err,body)->
         return _cb() if err
 
         parser body,(error,cands)->
@@ -119,11 +126,8 @@ finder.setOptions = (opts)->
   finder.getDetail = opts.getDetail if opts.getDetail?
   finder.favicon  = opts.favicon if opts.favicon?
 
-requestAndEncodeWithDetectCharset = (url,callback)->
-  request.get
-    uri: url
-    encoding: null
-  , (err,res,body)->
+requestAndEncodeWithDetectCharset = (req,callback)->
+  request.get req, (err,res,body)->
     return callback err,null if err
 
     charset = jschardet.detect(body).encoding
