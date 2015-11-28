@@ -56,7 +56,7 @@ module.exports = finder = (req,callback)->
         if /^https?/.test cand.href
           cand.url = cand.href
         else
-          cand.url = "#{urlObject.protocol}//#{urlObject.host}#{cand.href}"
+          cand.url = url.resolve "#{urlObject.protocol}//#{urlObject.host}", cand.href
     cb()
 
   ,(cb)->
