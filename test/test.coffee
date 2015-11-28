@@ -16,6 +16,8 @@ describe "find-rss", ->
   describe "callback:http url", ->
 
     it "正常系:返り値が配列",(done)->
+      @timeout 10000
+
       finder "https://github.com/nikezono",(error,candidates)->
 
         assert.equal error,null
@@ -27,6 +29,7 @@ describe "find-rss", ->
         done()
 
     it "正常系:リダイレクト",(done)->
+      @timeout 10000
 
       finder "https://github.com/nikezono/",(error,candidates)->
         assert.equal error,null
@@ -38,6 +41,7 @@ describe "find-rss", ->
         done()
 
     it "正常系:feedを直接読ませる",(done)->
+      @timeout 10000
 
       finder "https://github.com/nikezono.atom",(error,candidates)->
         assert.equal error,null
@@ -49,6 +53,7 @@ describe "find-rss", ->
         done()
 
     it "異常系:URLの接続先が存在しない",(done)->
+      @timeout 10000
 
       finder "http://n.o.t.f.o.u.n.d",(error,candidates)->
         assert.ok error?
@@ -57,6 +62,7 @@ describe "find-rss", ->
   describe "options",->
 
     it "正常系:faviconを取得しない",(done)->
+      @timeout 10000
 
       finder = require '../lib/find-rss'
       finder.setOptions
@@ -69,6 +75,7 @@ describe "find-rss", ->
         done()
 
     it "正常系:getDetail:Detail:false",(done)->
+      @timeout 10000
 
       finder = require '../lib/find-rss'
       finder.setOptions
@@ -85,6 +92,7 @@ describe "find-rss", ->
 
 
     it "正常系:getDetail:Detailを取得する",(done)->
+      @timeout 10000
 
       finder = require '../lib/find-rss'
       finder.setOptions
@@ -99,6 +107,7 @@ describe "find-rss", ->
         done()
 
     it "正常系:getDetail:url/sitenameを補完する",(done)->
+      @timeout 10000
 
       finder = require '../lib/find-rss'
       finder.setOptions
@@ -119,6 +128,7 @@ describe "find-rss", ->
 
 
     it "正常系:getDetail:feedを直接読ませる",(done)->
+      @timeout 10000
 
       finder = require '../lib/find-rss'
       finder.setOptions
@@ -145,6 +155,7 @@ describe "find-rss", ->
 
 
     it "正常系:getDetail:favicon:両方ON",(done)->
+      @timeout 10000
 
       finder = require '../lib/find-rss'
       finder.setOptions
