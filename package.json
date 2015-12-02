@@ -1,20 +1,21 @@
 {
   "name": "find-rss",
   "description": "find rss feeds",
-  "version": "1.5.11",
+  "version": "1.5.12",
   "author": "nikezono",
   "dependencies": {
-    "async": "*",
-    "feedparser": "*",
-    "htmlparser2": "*",
-    "iconv-lite": "^0.4.11",
-    "jschardet": "*",
-    "request": "*"
+    "async": "^1.5.0",
+    "feedparser": "^1.1.4",
+    "htmlparser2": "^3.9.0",
+    "iconv-lite": "^0.4.13",
+    "jschardet": "^1.4.1",
+    "request": "^2.67.0"
   },
   "devDependencies": {
     "codeclimate-test-reporter": "*",
     "coffee-errors": "*",
     "coffee-script": "*",
+    "coffeelint": "^1.14.1",
     "grunt": "*",
     "grunt-coffeelint": "*",
     "grunt-contrib-clean": "*",
@@ -40,7 +41,8 @@
   },
   "main": "lib/find-rss.js",
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test",
+    "prepublish": "grunt coffee"
   },
   "engines": {
     "node": "*"
