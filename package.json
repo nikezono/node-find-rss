@@ -27,6 +27,7 @@
     "grunt-notify": "*",
     "istanbul": "*",
     "mocha": "*",
+    "nock": "^9.0.5",
     "underscore": "*"
   },
   "keywords": [
