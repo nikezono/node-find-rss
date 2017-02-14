@@ -83,7 +83,7 @@ module.exports = (grunt) ->
       coverage:
         files: [
           expand: true
-          src: ['test/*']
+          src: ['test/**']
           dest: 'coverage/instrument/'
         ]
 
