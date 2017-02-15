@@ -68,6 +68,23 @@ describe "find-rss", ->
         assert.ok error?
         done()
 
+    # Promiseのtest
+    it "正常系:Promise形式でfeedを読める",->
+      finder "https://example.com/nikezono.atom"
+      .then (candidates)->
+        hasTitle =
+          candidates
+            .filter (i) -> titleMatcher(i.title)
+            .length > 0
+        assert.ok hasTitle
+
+    it "異常系:Promise形式でErrorを取得できる",->
+      @timeout 10000
+
+      finder "http://n.o.t.f.o.u.n.d"
+      .catch (error)->
+        assert.ok error?
+
   describe "options",->
 
     it "正常系:faviconを取得しない",(done)->
