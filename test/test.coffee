@@ -70,7 +70,7 @@ describe "find-rss", ->
 
     # Promiseのtest
     it "正常系:Promise形式でfeedを読める",->
-      finder "https://example.com/nikezono.atom"
+      return finder "https://example.com/nikezono.atom"
       .then (candidates)->
         hasTitle =
           candidates
@@ -81,7 +81,7 @@ describe "find-rss", ->
     it "異常系:Promise形式でErrorを取得できる",->
       @timeout 10000
 
-      finder "http://n.o.t.f.o.u.n.d"
+      return finder "http://n.o.t.f.o.u.n.d"
       .catch (error)->
         assert.ok error?
 
