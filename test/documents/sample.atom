@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xml:lang="en-US">
+  <id>tag:test</id>
+  <link type="text/html" rel="alternate" href="https://example.com/nikezono"/>
+  <link type="application/atom+xml" rel="self" href="https://example.com/nikezono.atom"/>
+  <title>nikezono’s Activity</title>
+  <updated>2017-02-06T03:51:16Z</updated>
+  <entry>
+    <id>tag:test</id>
+    <published>2017-02-06T03:51:16Z</published>
+    <updated>2017-02-06T03:51:16Z</updated>
+    <title type="html">hogehoge</title>
+    <author>
+      <name>nikezono</name>
+    </author>
+    <content type="html">test</content>
+  </entry>
+</feed>

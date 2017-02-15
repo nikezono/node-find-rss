@@ -2,6 +2,7 @@
 path = require 'path'
 assert  = require 'assert'
 request = require 'request'
+nock = require 'nock'
 
 # test framework
 finder = require '../lib/find-rss'
@@ -13,34 +14,45 @@ body = ""
 
 describe "find-rss", ->
 
+  beforeEach ->
+    # build mock-server
+    nock('https://example.com')
+      .get('/').replyWithFile(200, __dirname + '/documents/sample.html')
+      .get('/redirect').reply(301, undefined, { Location: '/'})
+      .get('/favicon.ico').reply(200, '')
+      .get('/nikezono').replyWithFile(200, __dirname + '/documents/sample.html')
+      .get('/nikezono.atom').replyWithFile(200, __dirname + '/documents/sample.atom')
+      .get('/no_favicon').replyWithFile(200, __dirname + '/documents/no_favicon.html')
+    
+
   describe "callback:http url", ->
 
     it "正常系:返り値が配列",(done)->
 
-      finder "https://github.com/nikezono",(error,candidates)->
+      finder "https://example.com",(error,candidates)->
 
         assert.equal error,null
         hasUrl =
           candidates
-            .filter (i) -> i.url is "https://github.com/nikezono.atom"
+            .filter (i) -> i.url is "https://example.com/nikezono.atom"
             .length > 0
         assert.ok hasUrl
         done()
 
     it "正常系:リダイレクト",(done)->
 
-      finder "https://github.com/nikezono/",(error,candidates)->
+      finder "https://example.com/redirect",(error,candidates)->
         assert.equal error,null
         hasUrl =
           candidates
-            .filter (i) -> i.url is "https://github.com/nikezono.atom"
+            .filter (i) -> i.url is "https://example.com/nikezono.atom"
             .length > 0
         assert.ok hasUrl
         done()
 
     it "正常系:feedを直接読ませる",(done)->
 
-      finder "https://github.com/nikezono.atom",(error,candidates)->
+      finder "https://example.com/nikezono.atom",(error,candidates)->
         assert.equal error,null
         hasTitle =
           candidates
@@ -64,8 +76,7 @@ describe "find-rss", ->
       finder.setOptions
         favicon:false
 
-      # @note:2014/10/14付けでhtmlにfaviconの場所が書いてない
-      finder "http://apple.com",(error,candidates)->
+      finder "https://example.com/no_favicon",(error,candidates)->
         assert.equal error,null
         assert.equal candidates[0].favicon, ''
         done()
@@ -77,7 +88,7 @@ describe "find-rss", ->
       finder.setOptions
         getDetail:false
 
-      finder "http://github.com/nikezono",(error,candidates)->
+      finder "https://example.com",(error,candidates)->
         assert.equal error,null
         hasTitle =
           candidates
@@ -92,7 +103,7 @@ describe "find-rss", ->
       finder = require '../lib/find-rss'
       finder.setOptions
         getDetail:true
-      finder "http://github.com/nikezono",(error,candidates)->
+      finder "https://example.com",(error,candidates)->
         assert.equal error,null
         hasTitle =
           candidates
@@ -106,15 +117,15 @@ describe "find-rss", ->
       finder = require '../lib/find-rss'
       finder.setOptions
         getDetail:true
-      finder "http://github.com/nikezono",(error,candidates)->
+      finder "https://example.com/nikezono",(error,candidates)->
         assert.equal error,null
         hasUrl =
           candidates
-            .filter (i) -> i.url is "http://github.com/nikezono.atom"
+            .filter (i) -> i.url is "https://example.com/nikezono.atom"
             .length > 0
         hasSiteName =
           candidates
-            .filter (i) -> i.sitename is "nikezono (Sho Nakazono) · GitHub"
+            .filter (i) -> i.sitename is "nikezono" # 詳細情報取得時のhtmlのtitleに補完されているか
             .length > 0
         assert.ok hasUrl
         assert.ok hasSiteName
@@ -127,7 +138,7 @@ describe "find-rss", ->
       finder = require '../lib/find-rss'
       finder.setOptions
         getDetail:true
-      finder "http://github.com/nikezono.atom",(error,candidates)->
+      finder "https://example.com/nikezono.atom",(error,candidates)->
         assert.equal error,null
         assert.ok candidates.length > 0
         hasTitle =
@@ -136,7 +147,7 @@ describe "find-rss", ->
             .length > 0
         hasUrl =
           candidates
-            .filter (i) -> i.url is "http://github.com/nikezono.atom"
+            .filter (i) -> i.url is "https://example.com/nikezono.atom"
             .length > 0
         hasSiteName =
           candidates
@@ -154,19 +165,19 @@ describe "find-rss", ->
       finder.setOptions
         getDetail:true
         favicon:true
-      finder "http://www.nhk.or.jp",(error,candidates)->
+      finder "https://example.com",(error,candidates)->
         assert.equal error,null
         hasUrl =
           candidates
-            .filter (i) -> i.url is "http://www.nhk.or.jp/rss/news/cat0.xml"
+            .filter (i) -> i.url is "https://example.com/nikezono.atom"
             .length > 0
         hasSiteName =
           candidates
-            .filter (i) -> i.sitename is "NHKオンライン" # 同じものが入る
+            .filter (i) -> i.sitename is "nikezono"
             .length > 0
         hasFavicon =
           candidates
-            .filter (i) -> i.favicon is "http://www.nhk.or.jp/favicon.ico"
+            .filter (i) -> i.favicon is "https://example.com/favicon.ico"
             .length > 0
         assert.ok hasUrl
         assert.ok hasSiteName
