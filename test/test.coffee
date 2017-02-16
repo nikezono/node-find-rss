@@ -24,6 +24,7 @@ describe "find-rss", ->
       .get('/nikezono.atom').replyWithFile(200, __dirname + '/documents/sample.atom')
       .get('/no_favicon').replyWithFile(200, __dirname + '/documents/no_favicon.html')
       .get('/not_found').reply(404, undefined)
+      .get('/pdf').replyWithFile(200, __dirname + '/documents/sample.pdf')
     
 
   describe "callback:http url", ->
@@ -201,3 +202,14 @@ describe "find-rss", ->
         assert.ok hasSiteName
         assert.ok hasFavicon
         done()
+ 
+    
+    it "異常系:responseが設定されたSize以上の場合はErrorを返す",->
+      
+      finder = require '../lib/find-rss'
+      # sample.pdfのsizeが16KBなので10KBに設定
+      finder.setOptions
+        maxResponseSize: 1000*10
+      return finder "https://example.com/pdf"
+      .catch (error)->
+        assert.equal error.message,"HTTP Response size is limit exceeded."
