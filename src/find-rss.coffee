@@ -10,6 +10,14 @@ url        = require 'url'
 parser = require "./parser"
 
 module.exports = finder = (req,callback)->
+  if typeof callback != 'function'
+    return new Promise (resolve, reject)->
+      _finder req, (err, result)->
+        return reject err if err
+        resolve result
+  _finder req, callback
+
+_finder = (req,callback)->
   if typeof req == "string"
     req = {
       url: req

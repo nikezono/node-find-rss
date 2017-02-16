@@ -23,6 +23,7 @@ describe "find-rss", ->
       .get('/nikezono').replyWithFile(200, __dirname + '/documents/sample.html')
       .get('/nikezono.atom').replyWithFile(200, __dirname + '/documents/sample.atom')
       .get('/no_favicon').replyWithFile(200, __dirname + '/documents/no_favicon.html')
+      .get('/not_found').reply(404, undefined)
     
 
   describe "callback:http url", ->
@@ -64,9 +65,26 @@ describe "find-rss", ->
     it "異常系:URLの接続先が存在しない",(done)->
       @timeout 10000
 
-      finder "http://n.o.t.f.o.u.n.d",(error,candidates)->
+      finder "https://example.com/not_found",(error,candidates)->
         assert.ok error?
         done()
+
+    # Promiseのtest
+    it "正常系:Promise形式でfeedを読める",->
+      return finder "https://example.com/nikezono.atom"
+      .then (candidates)->
+        hasTitle =
+          candidates
+            .filter (i) -> titleMatcher(i.title)
+            .length > 0
+        assert.ok hasTitle
+
+    it "異常系:Promise形式でErrorを取得できる",->
+      @timeout 10000
+
+      return finder "https://example.com/not_found"
+      .catch (error)->
+        assert.ok error?
 
   describe "options",->
 
