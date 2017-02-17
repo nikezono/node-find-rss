@@ -28,6 +28,7 @@ _finder = (req,callback)->
   # Options
   finder.favicon = true unless finder.favicon?
   finder.getDetail = false unless finder.getDetail?
+  finder.maxResponseSize = null unless finder.maxResponseSize?
 
   return callback new Error("Not HTTP URL is provided."),null unless /^https?/.test req.url
 
@@ -133,9 +134,13 @@ _finder = (req,callback)->
 finder.setOptions = (opts)->
   finder.getDetail = opts.getDetail if opts.getDetail?
   finder.favicon  = opts.favicon if opts.favicon?
+  finder.maxResponseSize = opts.maxResponseSize if opts.maxResponseSize?
 
 requestAndEncodeWithDetectCharset = (req,callback)->
-  request.get req, (err,res,body)->
+  # responseサイズを計測するための変数
+  buffer = ''
+  maxResponseSize = finder.maxResponseSize
+  req = request.get req, (err,res,body)->
     return callback err,null if err
 
     charset = jschardet.detect(body).encoding
@@ -146,3 +151,10 @@ requestAndEncodeWithDetectCharset = (req,callback)->
       body = iconv.decode(body, charset)
 
     return callback null,body
+  .on 'data', (chunk)->
+    if maxResponseSize != null
+      buffer += chunk
+      
+      if buffer.length > maxResponseSize
+        req.abort()
+        return callback new Error('HTTP Response size is limit exceeded.'),null
