@@ -9,17 +9,26 @@ wrapper of [htmlparser2](https://github.com/fb55/htmlparser2)
 
 ##install
 
-***using npm:***
-
-    npm install find-rss
-
-***using package.json:***
-
-    "find-rss": "*"
+    $ npm install find-rss
 
 # Simple To Use: HTTP Address
 
     # CoffeeScript
+    finder  = require 'find-rss'
+    finder "http://nikezono.com"
+    .then (candidates)->
+      console.log candidates
+
+      # =>
+      # [ { sitename: 'nikezono.com'
+          rel: 'alternate',
+          type: 'application/atom+xml',
+          title: 'RSS',
+          href: '/atom.xml',
+          favicon: 'http://nikezono.com/favicon.ico',
+          url: 'http://nikezono.com/atom.xml' } ]
+
+    # CoffeeScript(callback)
 
     finder  = require 'find-rss'
     finder "http://nikezono.com",(error,response,body)->
@@ -37,8 +46,9 @@ wrapper of [htmlparser2](https://github.com/fb55/htmlparser2)
 
 # Options
 
-  finder = require 'find-rss'
-  finder.setOptions
-    favicon:true # find favicon url(default:true)
-    getDetail:false # get detail property in each atom/rss candidate(default:false)
+    finder = require 'find-rss'
+    finder.setOptions
+      favicon:true # find favicon url(default:true)
+      getDetail:false # get detail property in each atom/rss candidate(default:false)
+      maxResponseSize:1000*1000*10 # set http response size limit, e.g. 10MB(dafault:null)
 
