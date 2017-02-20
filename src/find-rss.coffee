@@ -64,7 +64,7 @@ _finder = (req,callback)->
 
         if /^https?/.test cand.href
           cand.url = cand.href
-        else
+        else if cand.href?
           cand.url = url.resolve "#{urlObject.protocol}//#{urlObject.host}", cand.href
     cb()
 
