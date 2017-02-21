@@ -77,8 +77,9 @@ module.exports = exports = (htmlBody,callback)->
     feedparser = new FeedParser()
     candidates = []
 
-    feedparser.on 'error',(error)->
-      return callback error,null
+    feedparser.on 'error',(err)->
+      # FeedParserの仕様的にerrorは複数回発生するため、error発生時はendをemitして終了させる
+      this.emit 'end',err
 
     feedparser.on 'readable',->
       if candidates.length is 0
@@ -86,7 +87,8 @@ module.exports = exports = (htmlBody,callback)->
         candidates.push data
 
     feedparser.write htmlBody
-    feedparser.end ->
+    feedparser.end (err)->
+      return callback err if err
       return callback null,candidates
 
   else
@@ -96,6 +98,3 @@ module.exports = exports = (htmlBody,callback)->
       cand.favicon  = favicon
 
     return callback null,candidates
-
-
-
