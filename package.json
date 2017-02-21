@@ -1,7 +1,7 @@
 {
   "name": "find-rss",
-  "description": "find rss feeds",
-  "version": "1.6.0",
+  "description": "Find RSS/ATOM feed by HTML/URL",
+  "version": "1.6.2",
   "author": "nikezono",
   "dependencies": {
     "async": "^2.1.4",
@@ -48,8 +48,6 @@
   "engines": {
     "node": "*"
   },
-  "readmeFilename": "README.md",
-  "gitHead": "303a4d890e16de433e20264330b47a3452f49777",
   "directories": {
     "test": "test"
   },
