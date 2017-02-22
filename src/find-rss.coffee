@@ -119,7 +119,7 @@ _finder = (req,callback)->
       else
         guess = "#{urlObject.protocol}//#{urlObject.host}/favicon.ico"
         request guess, (err,res,body)->
-          return _cb if err or res?.statusCode isnt 200
+          return _cb() if err or res?.statusCode isnt 200
           cand.favicon = guess
           _cb()
     ,->
