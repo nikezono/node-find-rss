@@ -1,7 +1,7 @@
 {
   "name": "find-rss",
   "description": "Find RSS/ATOM feed by HTML/URL",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "author": "nikezono",
   "dependencies": {
     "async": "^2.1.4",
