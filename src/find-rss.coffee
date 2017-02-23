@@ -148,7 +148,10 @@ requestAndEncodeWithDetectCharset = (req,callback)->
       return callback new Error('NotFoundEncodingError'),null
 
     if charset isnt ('utf-8' or 'UTF-8')
-      body = iconv.decode(body, charset)
+      try
+        body = iconv.decode(body, charset)
+      catch error
+        return callback error,null
 
     return callback null,body
   .on 'data', (chunk)->
